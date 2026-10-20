@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarePulse Doctor Appointment Booking Portal | GitHub Portfolio</title>
+<meta name="description" content="Power Apps Canvas app on Dataverse with role-based start screens and a Power Automate confirmation email for a clinic appointment booking portal.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Open Sans','Segoe UI',Arial,sans-serif;background:#F4F8FA;color:#12303D;padding:32px 20px;}
+  .page{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:30px;}
+
+  .header{background:#0A4D68;border-bottom:4px solid #05BFDB;border-radius:14px;padding:28px 36px;}
+  .header-title{font-family:'Montserrat','Segoe UI',sans-serif;font-size:26px;font-weight:800;color:#FFFFFF;line-height:1.25;}
+  .header-sub{font-size:12px;font-weight:600;color:#7FD6E6;letter-spacing:1.5px;text-transform:uppercase;margin-top:6px;}
+  .header-desc{font-size:14px;color:#CFE8EF;margin-top:14px;line-height:1.7;max-width:700px;}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+  .badge{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.4px;}
+  .b-purple{background:#7B2FBE;color:#fff;} .b-blue{background:#0078D4;color:#fff;}
+  .b-teal{background:#0B6A7E;color:#fff;} .b-navy{background:#003087;color:#fff;}
+  .b-green{background:#2E7D32;color:#fff;} .b-orange{background:#C44B00;color:#fff;}
+  .b-alm{background:#5B21B6;color:#fff;} .b-red{background:#B00020;color:#fff;}
+
+  .section{display:flex;flex-direction:column;gap:14px;}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#5B6F7C;}
+  .section-title{font-family:'Montserrat','Segoe UI',sans-serif;font-size:19px;font-weight:700;color:#12303D;display:flex;align-items:center;gap:8px;}
+
+  .card{background:#fff;border-radius:12px;border:1px solid #D9E2E8;overflow:hidden;}
+  .card-header{padding:13px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #D9E2E8;background:#F9FBFC;flex-wrap:wrap;}
+  .card-header-icon{font-size:16px;}
+  .card-header-title{font-family:'Montserrat','Segoe UI',sans-serif;font-size:13px;font-weight:700;color:#12303D;}
+  .card-header-sub{font-size:11px;color:#0A4D68;margin-left:auto;background:#E0F2F7;padding:2px 10px;border-radius:10px;font-weight:600;}
+  .card-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px;}
+
+  .note-banner{background:#E0F2F7;border:1px solid #9AD4E3;border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:8px;}
+  .note-banner-icon{font-size:14px;flex-shrink:0;}
+  .note-banner-text{font-size:12px;color:#0A4D68;font-weight:600;line-height:1.5;}
+
+  .ss-wrap{background:#F4F8FA;border-radius:10px;border:1px solid #D9E2E8;padding:10px;text-align:center;}
+  .ss-wrap img{max-width:100%;height:auto;border-radius:6px;box-shadow:0 4px 18px rgba(10,77,104,0.12);}
+  .ss-caption{font-size:11px;color:#5B6F7C;margin-top:8px;font-weight:600;letter-spacing:0.3px;line-height:1.4;}
+  .ss-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .ss-small img{max-width:100%;}
+  .ss-stack{display:flex;flex-direction:column;gap:12px;}
+
+  .feature-list{display:flex;flex-direction:column;gap:8px;}
+  .feature-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #D9E2E8;border-left:3px solid #0A4D68;}
+  .fi-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+  .fi-text{font-size:13px;color:#3F5764;line-height:1.55;}
+  .fi-text strong{color:#12303D;}
+
+  .roles-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .role-card{background:#fff;border-radius:10px;border:1px solid #D9E2E8;padding:13px 15px;display:flex;gap:10px;align-items:flex-start;}
+  .role-avatar{width:34px;height:34px;border-radius:50%;background:#E0F2F7;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+  .role-name{font-size:13px;font-weight:700;color:#12303D;margin-bottom:3px;}
+  .role-desc{font-size:12px;color:#5B6F7C;line-height:1.5;}
+  .role-desc code{font-family:Consolas,'Courier New',monospace;font-size:11px;background:#EEF4F7;padding:1px 5px;border-radius:4px;color:#0A4D68;}
+
+  .table-list{display:flex;flex-direction:column;gap:8px;}
+  .table-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #D9E2E8;flex-wrap:wrap;}
+  .table-icon{font-size:14px;flex-shrink:0;}
+  .table-name{font-family:'Montserrat','Segoe UI',sans-serif;font-size:12.5px;font-weight:700;color:#12303D;}
+  .table-desc{font-size:12px;color:#5B6F7C;margin-left:auto;text-align:right;max-width:480px;line-height:1.45;}
+  .table-tag{font-size:10px;font-weight:700;letter-spacing:0.4px;padding:2px 9px;border-radius:10px;background:#E0F2F7;color:#0B6A7E;flex-shrink:0;}
+  .table-tag.core{background:#FEF3C7;color:#92400E;}
+  .table-tag.user{background:#F3E8FF;color:#5B21B6;}
+
+  .dd-wrap{overflow-x:auto;}
+  .dd{width:100%;border-collapse:collapse;min-width:520px;}
+  .dd th{text-align:left;font-size:11px;font-weight:700;letter-spacing:0.4px;color:#fff;background:#0A4D68;padding:9px 12px;}
+  .dd td{font-size:12px;color:#3F5764;padding:9px 12px;border-bottom:1px solid #E3EAEE;vertical-align:top;line-height:1.45;}
+  .dd tr:nth-child(even) td{background:#F4F8FA;}
+  .dd td:first-child{font-weight:600;color:#12303D;white-space:nowrap;}
+
+  .flow-steps{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin-bottom:4px;}
+  .flow-step{background:#F4F8FA;border:1.5px solid #D9E2E8;border-radius:8px;padding:10px 12px;flex:1;min-width:150px;}
+  .flow-step-num{width:20px;height:20px;border-radius:50%;background:#0A4D68;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:5px;}
+  .flow-step-title{font-size:12px;font-weight:700;color:#12303D;margin-bottom:3px;}
+  .flow-step-desc{font-size:11px;color:#5B6F7C;line-height:1.5;}
+  .flow-arrow{font-size:14px;color:#9FB8C4;font-weight:700;align-self:center;flex-shrink:0;}
+
+  .code-block{background:#0B2F3F;border-radius:10px;padding:14px 16px;overflow-x:auto;}
+  .code-title{font-size:11px;font-weight:700;color:#7FD6E6;letter-spacing:0.4px;margin-bottom:8px;}
+  .code-block pre{font-family:Consolas,'Courier New',monospace;font-size:12px;line-height:1.6;color:#E6F4F8;white-space:pre;}
+
+  .screens-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+  .screen-card{background:#fff;border:1px solid #D9E2E8;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+  .screen-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .screen-num{display:inline-flex;width:22px;height:22px;border-radius:6px;background:#0A4D68;color:#05BFDB;font-family:'Montserrat','Segoe UI',sans-serif;font-size:11px;font-weight:800;align-items:center;justify-content:center;margin-bottom:8px;}
+  .screen-name{font-family:'Montserrat','Segoe UI',sans-serif;font-size:13px;font-weight:700;color:#12303D;margin-bottom:4px;}
+  .screen-desc{font-size:12px;color:#5B6F7C;line-height:1.55;max-width:640px;}
+  .screen-mode{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;}
+  .mode-pill{font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;}
+  .mode-admin{background:#E0F2F7;color:#0A4D68;}
+  .mode-recep{background:#D1FAE5;color:#065F46;}
+  .mode-doc{background:#FEF3C7;color:#92400E;}
+  .mode-all{background:#E2E8F0;color:#334155;}
+
+  .tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .tech-card{background:#fff;border:1px solid #D9E2E8;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+  .tech-icon{font-size:22px;flex-shrink:0;}
+  .tech-name{font-size:13px;font-weight:700;color:#12303D;}
+  .tech-use{font-size:12px;color:#5B6F7C;margin-top:2px;line-height:1.45;}
+
+  .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .impact-card{background:#fff;border:1px solid #D9E2E8;border-radius:10px;padding:16px;text-align:center;}
+  .impact-val{font-family:'Montserrat','Segoe UI',sans-serif;font-size:26px;font-weight:800;color:#0A4D68;}
+  .impact-lbl{font-size:12px;color:#5B6F7C;margin-top:4px;line-height:1.45;}
+
+  .author-card{background:#0A4D68;border-bottom:4px solid #05BFDB;border-radius:12px;padding:22px 28px;display:flex;align-items:center;gap:16px;}
+  .author-avatar{width:50px;height:50px;border-radius:50%;background:#05BFDB;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#0A4D68;flex-shrink:0;font-family:'Montserrat','Segoe UI',sans-serif;}
+  .author-name{font-family:'Montserrat','Segoe UI',sans-serif;font-size:16px;font-weight:700;color:#FFFFFF;}
+  .author-role{font-size:12px;color:#CFE8EF;margin-top:3px;}
+  .author-links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .author-link{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-decoration:none;}
+  .al-li{background:#0A66C2;color:#fff;} .al-gh{background:#fff;color:#0A4D68;}
+  .author-link:focus-visible{outline:3px solid #05BFDB;outline-offset:2px;}
+
+  .footer{text-align:center;font-size:11px;color:#5B6F7C;padding-top:8px;}
+
+  @media (max-width:720px){
+    body{padding:20px 12px;}
+    .header{padding:22px 20px;}
+    .header-title{font-size:22px;}
+    .roles-grid,.tech-grid,.ss-pair{grid-template-columns:1fr;}
+    .impact-grid{grid-template-columns:1fr 1fr;}
+    .table-desc{margin-left:0;text-align:left;max-width:none;}
+    .flow-arrow{display:none;}
+    .author-card{padding:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-title">🩺 CarePulse — Doctor Appointment Booking Portal</div>
+    <div class="header-sub">Clinic Operations · Microsoft Power Platform Project</div>
+    <div class="header-desc">A Power Apps Canvas application on Microsoft Dataverse that digitizes clinic appointment booking from first call to consultation. Receptionists, Doctors and Clinic Admins each land on their own screen at launch, bookings and consultation notes live in one place, and a Power Automate flow emails the patient a branded booking card the moment an appointment is created.</div>
+    <div class="badges">
+      <span class="badge b-purple">Power Apps Canvas App</span>
+      <span class="badge b-blue">Microsoft Dataverse</span>
+      <span class="badge b-teal">Power Automate</span>
+      <span class="badge b-navy">Role-Based Start Screen</span>
+      <span class="badge b-green">HTML Confirmation Email</span>
+      <span class="badge b-alm">Solutions</span>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <div class="section">
+    <div class="section-label">Why This Was Built</div>
+    <div class="section-title">🎯 Problem Statement</div>
+    <div class="feature-list">
+      <div class="feature-item"><div class="fi-icon">❌</div><div class="fi-text"><strong>Scattered booking records:</strong> Appointments were noted down from calls and walk-ins in separate sheets, with no single source of truth for who is booked with which doctor and when</div></div>
+      <div class="feature-item"><div class="fi-icon">❌</div><div class="fi-text"><strong>One view for everyone:</strong> Reception, doctors and clinic admins all needed different things from the same data, but had no role-specific screens</div></div>
+      <div class="feature-item"><div class="fi-icon">❌</div><div class="fi-text"><strong>No written confirmation:</strong> Patients had nothing in writing showing their date, time slot, doctor and appointment ID</div></div>
+      <div class="feature-item"><div class="fi-icon">❌</div><div class="fi-text"><strong>Doctor details out of reach:</strong> Specialty, OPD room and consultation fee were not available in the same place where bookings were made</div></div>
+    </div>
+  </div>
+
+  <!-- ROLES -->
+  <div class="section">
+    <div class="section-label">Who Uses It</div>
+    <div class="section-title">👥 Roles</div>
+    <div class="roles-grid">
+      <div class="role-card"><div class="role-avatar">🧾</div><div><div class="role-name">Receptionist</div><div class="role-desc">Lands on <code>Scr_Patient_Bookings</code> to search, create and edit appointments, and to print the confirmation card</div></div></div>
+      <div class="role-card"><div class="role-avatar">🩺</div><div><div class="role-name">Doctor</div><div class="role-desc">Lands on <code>Scr_Doctor_Consulation</code> to see appointments by date, update the status and record consultation notes</div></div></div>
+      <div class="role-card"><div class="role-avatar">🔑</div><div><div class="role-name">Clinic Admin</div><div class="role-desc">Lands on <code>Scr_Clinic_Admin</code> to manage the Doctors Directory, with buttons to jump to Patient Bookings and Doctor Consultations</div></div></div>
+      <div class="role-card"><div class="role-avatar">✉️</div><div><div class="role-name">Patient</div><div class="role-desc">Does not use the app. Receives the booking confirmation email with date, time, specialty, doctor and appointment ID</div></div></div>
+    </div>
+  </div>
+
+  <!-- DATA MODEL -->
+  <div class="section">
+    <div class="section-label">Data Backend</div>
+    <div class="section-title">🗂️ Dataverse Tables (3)</div>
+    <div class="table-list">
+      <div class="table-row"><span class="table-icon">🔑</span><span class="table-name">Tbl_User_Roles</span><span class="table-tag user">Access Control</span><span class="table-desc">User Role and User Email Address; decides which screen each signed-in user starts on</span></div>
+      <div class="table-row"><span class="table-icon">📅</span><span class="table-name">Tbl_Appointment</span><span class="table-tag core">Core</span><span class="table-desc">One row per booking: patient, specialty, doctor, date, time slot, reason, status and consultation notes</span></div>
+      <div class="table-row"><span class="table-icon">🩺</span><span class="table-name">Tbl_Doctors_Directory</span><span class="table-tag">Reference</span><span class="table-desc">Doctor ID, name, specialty, consultation fee and OPD room number</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-header-icon">📅</div><div class="card-header-title">Tbl_Appointment — columns</div><div class="card-header-sub">11 columns</div></div>
+      <div class="card-body">
+        <div class="dd-wrap">
+        <table class="dd">
+          <thead><tr><th>Display Name</th><th>Data Type</th><th>Business Rules &amp; Usage</th></tr></thead>
+          <tbody>
+            <tr><td>Appointment ID</td><td>AutoNumber</td><td>Primary Key (e.g., APT-2026-0001)</td></tr>
+            <tr><td>Patient Full Name</td><td>Single Line of Text</td><td>Mandatory patient name</td></tr>
+            <tr><td>Contact Mobile</td><td>Single Line of Text</td><td>Phone number for SMS alerts</td></tr>
+            <tr><td>Patient Email</td><td>Single Line of Text</td><td>Email for calendar invite</td></tr>
+            <tr><td>Specialty</td><td>Single Line of Text</td><td>Lookup to Doctors Directory entity</td></tr>
+            <tr><td>Doctor</td><td>Single Line of Text</td><td>Lookup to Doctors Directory entity</td></tr>
+            <tr><td>Appointment Date</td><td>Date Only</td><td>Selected visit date</td></tr>
+            <tr><td>Time Slot</td><td>Choice</td><td>09:00 AM, 10:00 AM, 11:30 AM, 02:00 PM, 04:00 PM</td></tr>
+            <tr><td>Reason / Symptoms</td><td>Multiple Lines of Text</td><td>Brief note on medical concern</td></tr>
+            <tr><td>Appointment Status</td><td>Choice</td><td>Requested, Confirmed, Completed, Cancelled</td></tr>
+            <tr><td>Doctor Consultation Notes</td><td>Multiple Lines of Text</td><td>Filled by doctor during visit</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-header-icon">🩺</div><div class="card-header-title">Tbl_Doctors_Directory — columns</div><div class="card-header-sub">5 columns</div></div>
+      <div class="card-body">
+        <div class="dd-wrap">
+        <table class="dd">
+          <thead><tr><th>Display Name</th><th>Data Type</th><th>Usage &amp; Business Rules</th></tr></thead>
+          <tbody>
+            <tr><td>Doctor ID</td><td>AutoNumber</td><td>Primary Key</td></tr>
+            <tr><td>Doctor Full Name</td><td>Single Line of Text</td><td>Practitioner name (e.g., Dr. Ananya Sharma)</td></tr>
+            <tr><td>Specialty</td><td>Choice</td><td>Cardiology, Pediatrics, General Medicine, Orthopedics etc.</td></tr>
+            <tr><td>Consultation Fee</td><td>Currency</td><td>Base visit charge</td></tr>
+            <tr><td>OPD Room Number</td><td>Single Line of Text</td><td>Room location (e.g., OPD Room 104)</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTING LOGIC -->
+  <div class="section">
+    <div class="section-label">Core Design Pattern</div>
+    <div class="section-title">🔐 Role-Based Start Screen Routing</div>
+    <div class="card">
+      <div class="card-header"><div class="card-header-icon">⚙️</div><div class="card-header-title">How the app decides where each user starts</div><div class="card-header-sub">Power Apps · Dataverse</div></div>
+      <div class="card-body">
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-title">Find the user's role</div><div class="flow-step-desc">A named formula in App.Formulas looks up the signed-in user's email in Tbl_User_Roles, comparing Lower() on both sides, and returns the User Role</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-title">Pick the screen</div><div class="flow-step-desc">App.StartScreen runs a Switch() on that role value</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-title">Land on the role's screen</div><div class="flow-step-desc">Receptionist opens Patient Bookings, Doctor opens Doctor Consultation, Clinic Admin opens Clinic Admin</div></div>
+        </div>
+        <div class="code-block">
+          <div class="code-title">App · Formulas</div>
+<pre>Var_Logged_User_Role = LookUp(
+    Tbl_User_Roles,
+    Lower('User Email Address') = Lower(User().Email)
+).'User Role';</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-title">App · StartScreen</div>
+<pre>Switch(Var_Logged_User_Role,
+    "Receptionist", Scr_Patient_Bookings,
+    "Doctor", Scr_Doctor_Consulation,
+    "Clinic Admin", Scr_Clinic_Admin
+)</pre>
+        </div>
+        <div class="ss-wrap ss-small">
+          <img src="screenshots/01-user-roles-table.png" alt="Tbl_User_Roles in Dataverse with three rows: Clinic Admin, Doctor and Receptionist, each mapped to an email address" width="375" height="188">
+          <div class="ss-caption">Tbl_User_Roles — one row per user, mapping an email address to Clinic Admin, Doctor or Receptionist</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="section">
+    <div class="section-label">Canvas App</div>
+    <div class="section-title">📱 4 Canvas Screens</div>
+    <div class="note-banner"><div class="note-banner-icon">🔒</div><div class="note-banner-text">Screenshots in this page use sample test data from a personal Microsoft tenant. Patient names and phone numbers are not real, and email addresses are blurred.</div></div>
+    <div class="screens-grid">
+
+      <div class="screen-card">
+        <div class="screen-card-top">
+          <div>
+            <div class="screen-num">1</div>
+            <div class="screen-name">Scr_Clinic_Admin</div>
+            <div class="screen-desc">Searchable Doctors Directory on the left, with an initials avatar, specialty, OPD room, fee and doctor ID for each doctor. Selecting a doctor opens the Doctor Details form on the right. Header buttons jump to Patient Bookings and Doctor Consultations.</div>
+          </div>
+          <div class="screen-mode"><span class="mode-pill mode-admin">Clinic Admin</span></div>
+        </div>
+        <div class="ss-wrap">
+          <img src="screenshots/02-clinic-admin-screen.png" alt="Clinic Admin screen with a searchable list of doctors showing specialty, OPD room and fee, and a Doctor Details form with name, speciality, fee and room fields" width="918" height="525">
+          <div class="ss-caption">Clinic Admin — Doctors Directory gallery with search, and the Doctor Details edit form</div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-top">
+          <div>
+            <div class="screen-num">2</div>
+            <div class="screen-name">Scr_Patient_Bookings</div>
+            <div class="screen-desc">Search appointments by patient, phone or ID. Each row shows a colour-coded status pill, specialty, doctor, date, time and appointment ID. The form is grouped into Patient Details, Appointment Details and Consultation, with Print, Cancel and Submit actions.</div>
+          </div>
+          <div class="screen-mode"><span class="mode-pill mode-recep">Receptionist</span><span class="mode-pill mode-admin">Clinic Admin</span></div>
+        </div>
+        <div class="ss-stack">
+          <div class="ss-wrap">
+            <img src="screenshots/03-patient-bookings-gallery.png" alt="Patient Bookings screen with an appointments list and a booking form showing patient details and appointment details" width="933" height="533">
+            <div class="ss-caption">Appointments gallery with status pills, and the booking form</div>
+          </div>
+          <div class="ss-wrap">
+            <img src="screenshots/04-patient-bookings-form.png" alt="Patient Bookings screen scrolled down to the consultation section with Print, Cancel and Submit buttons" width="942" height="532">
+            <div class="ss-caption">Scrolled form with Print, Cancel and Submit actions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-top">
+          <div>
+            <div class="screen-num">3</div>
+            <div class="screen-name">Scr_Appointment_Confirmation</div>
+            <div class="screen-desc">A printable booking confirmation card built in an HTML text control from the selected appointment: date, time, patient, specialty, doctor and appointment ID, with a Print button and a back arrow.</div>
+          </div>
+          <div class="screen-mode"><span class="mode-pill mode-all">Print-ready card</span></div>
+        </div>
+        <div class="ss-wrap">
+          <img src="screenshots/05-appointment-confirmation-card.png" alt="Booking confirmed card with date, time, patient, specialty, doctor and appointment ID, followed by a Print button and a back arrow" width="924" height="521">
+          <div class="ss-caption">Booking confirmation card rendered from Power Fx and HTML, with Print</div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-top">
+          <div>
+            <div class="screen-num">4</div>
+            <div class="screen-name">Scr_Doctor_Consulation</div>
+            <div class="screen-desc">A date picker narrows the list to that day's appointments. The selected patient's details are shown for reference, and the doctor updates the appointment status and records consultation notes.</div>
+          </div>
+          <div class="screen-mode"><span class="mode-pill mode-doc">Doctor</span></div>
+        </div>
+        <div class="ss-wrap">
+          <img src="screenshots/06-doctor-consultation-screen.png" alt="Doctor Consultation screen with a date picker, a list of the day's appointments, patient and appointment details, and fields for appointment status and consultation notes" width="933" height="530">
+          <div class="ss-caption">Doctor Consultation — daily appointment list, patient details, status and consultation notes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTOMATION -->
+  <div class="section">
+    <div class="section-label">Business Logic</div>
+    <div class="section-title">⚡ Power Automate — “CarePulse - Appointment Created”</div>
+    <div class="card">
+      <div class="card-header"><div class="card-header-icon">🔁</div><div class="card-header-title">Automated cloud flow: new appointment → confirmation email</div><div class="card-header-sub">Dataverse · Office 365 Outlook</div></div>
+      <div class="card-body">
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-title">Row added</div><div class="flow-step-desc">Dataverse trigger fires when a row is added to the appointments table, scope Organization</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-title">Map the time slot</div><div class="flow-step-desc">A Compose action named TimeSlotMap turns the Time Slot choice number into text such as 09:00 AM</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-title">Send an email (V2)</div><div class="flow-step-desc">An HTML card goes to the Patient Email, with the Appointment ID in the subject</div></div>
+        </div>
+        <div class="ss-pair">
+          <div class="ss-wrap ss-small">
+            <img src="screenshots/07-flow-trigger.png" alt="Dataverse trigger: When a row is added, modified or deleted, with change type Added and scope Organization" width="428" height="207">
+            <div class="ss-caption">Trigger — change type Added, scope Organization</div>
+          </div>
+          <div class="ss-wrap ss-small">
+            <img src="screenshots/08-flow-timeslotmap.png" alt="Compose action named TimeSlotMap holding a JSON map from choice numbers to time slot labels" width="410" height="179">
+            <div class="ss-caption">TimeSlotMap — choice number to readable time</div>
+          </div>
+        </div>
+        <div class="ss-pair">
+          <div class="ss-wrap ss-small">
+            <img src="screenshots/09-flow-email-part1.png" alt="Send an email V2 action with To set to Patient Email, a subject containing the appointment ID, and an HTML body" width="424" height="570">
+            <div class="ss-caption">Send an email (V2) — recipient, subject and HTML body, part 1</div>
+          </div>
+          <div class="ss-wrap ss-small">
+            <img src="screenshots/10-flow-email-part2.png" alt="The lower part of the HTML email body with patient, specialty, doctor and appointment ID rows and a footer note" width="415" height="561">
+            <div class="ss-caption">Send an email (V2) — detail rows and footer, part 2</div>
+          </div>
+        </div>
+        <div class="ss-wrap">
+          <img src="screenshots/11-patient-email-outlook.png" alt="Outlook inbox showing the CarePulse Appointment booked email with date, time, patient, specialty, doctor and appointment ID" width="1222" height="715">
+          <div class="ss-caption">The email the patient receives in Outlook</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="section">
+    <div class="section-label">Built With</div>
+    <div class="section-title">🛠️ Technology Stack</div>
+    <div class="tech-grid">
+      <div class="tech-card"><div class="tech-icon">📱</div><div><div class="tech-name">Power Apps — Canvas App</div><div class="tech-use">CarePulse-Doctor Appointment Booking App with 4 screens and role-based start routing</div></div></div>
+      <div class="tech-card"><div class="tech-icon">🗄️</div><div><div class="tech-name">Microsoft Dataverse</div><div class="tech-use">3 tables for user roles, appointments and the doctors directory</div></div></div>
+      <div class="tech-card"><div class="tech-icon">⚡</div><div><div class="tech-name">Power Automate</div><div class="tech-use">Automated cloud flow that reacts to every new appointment row</div></div></div>
+      <div class="tech-card"><div class="tech-icon">✉️</div><div><div class="tech-name">Office 365 Outlook</div><div class="tech-use">Send an email (V2) action delivering the HTML confirmation card</div></div></div>
+      <div class="tech-card"><div class="tech-icon">🧩</div><div><div class="tech-name">Solutions</div><div class="tech-use">App, tables and flow packaged in the solution “CarePulse-Doctor Appointment Booking Portal”</div></div></div>
+      <div class="tech-card"><div class="tech-icon">🧮</div><div><div class="tech-name">Power Fx</div><div class="tech-use">Named formulas, StartScreen routing, filters, status colours and the HTML card</div></div></div>
+    </div>
+  </div>
+
+  <!-- IMPACT -->
+  <div class="section">
+    <div class="section-label">What Was Achieved</div>
+    <div class="section-title">📈 Delivered</div>
+    <div class="impact-grid">
+      <div class="impact-card"><div class="impact-val">3</div><div class="impact-lbl">Dataverse tables covering users, appointments and doctors</div></div>
+      <div class="impact-card"><div class="impact-val">4</div><div class="impact-lbl">Canvas screens: admin, bookings, confirmation and consultation</div></div>
+      <div class="impact-card"><div class="impact-val">3</div><div class="impact-lbl">User roles, each routed automatically to its own start screen</div></div>
+      <div class="impact-card"><div class="impact-val">5</div><div class="impact-lbl">Bookable time slots, managed as a Dataverse choice column</div></div>
+      <div class="impact-card"><div class="impact-val">4</div><div class="impact-lbl">Appointment statuses tracked: Requested, Confirmed, Completed, Cancelled</div></div>
+      <div class="impact-card"><div class="impact-val">1</div><div class="impact-lbl">Automated flow emailing every patient a branded booking card</div></div>
+    </div>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="section">
+    <div class="section-label">Built By</div>
+    <div class="author-card">
+      <div class="author-avatar">JP</div>
+      <div>
+        <div class="author-name">Javed Pinjari</div>
+        <div class="author-role">Power Platform Developer · Microsoft Power Apps &amp; Dataverse</div>
+        <div class="author-links">
+          <a class="author-link al-li" href="https://www.linkedin.com/in/javed-pinjari-0a176582/">🔗 LinkedIn</a>
+          <a class="author-link al-gh" href="https://github.com/javedmcs83-ali">🐙 GitHub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">CarePulse — Doctor Appointment Booking Portal &nbsp;·&nbsp; Built on Microsoft Power Platform &nbsp;·&nbsp; 2026<br>Personal learning project using synthetic data. Not affiliated with or endorsed by any employer or client.</div>
+
+</div>
+</body>
+</html>
