@@ -4,7 +4,7 @@ A **Power Apps Canvas app on Microsoft Dataverse** that digitizes clinic appoint
 
 ![Power Apps](https://img.shields.io/badge/Power%20Apps-Canvas-742774) ![Dataverse](https://img.shields.io/badge/Microsoft-Dataverse-0078D4) ![Power Automate](https://img.shields.io/badge/Power%20Automate-Cloud%20Flow-0B6A7E) ![Solutions](https://img.shields.io/badge/ALM-Solutions-5B21B6)
 
-> 🔗 **Live project page:** https://javedmcs83-ali.github.io/REPO-NAME/ *(replace `REPO-NAME` after enabling GitHub Pages)*
+> 🔗 **Live project page:** https://javedmcs83-ali.github.io/CarePulse-Doctor-Appointment-Portal/
 
 ## 🎯 Problem
 - Appointments were noted from calls and walk-ins in separate sheets, with no single source of truth
